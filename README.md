@@ -8,9 +8,9 @@
 
 # Table of Contents
 
-1. [Learning Resources]()
-2. [Requirements]()
-2. [Installation Guide]()
+1. [Learning Resources](#learning-resources)
+2. [Requirements](#requirements)
+2. [Installation Guide](#installation-guide)
 
 
 ## Learning Resources
