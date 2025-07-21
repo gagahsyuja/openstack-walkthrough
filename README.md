@@ -184,3 +184,12 @@ Finally, restart the memcached service:
 ```bash
 # systemctl restart memcached
 ```
+
+#### Minimal Deployment
+Now is the crucial part, finally we will build what is called as **"stack"**, means stack of services. At a minimum, you need atleast these following services:
+
+- [**Keystone** - Identity service](services/keystone.md)
+- [**Glance** - Image service]()
+- [**Placement** - Placement service]()
+- [**Nova** - Compute service]()
+- [**Neutron** - Networking service]()
