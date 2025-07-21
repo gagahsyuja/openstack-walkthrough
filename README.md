@@ -3,7 +3,7 @@
 </div>
 <h1 align=center>OpenStack Walkthrough</h1>
 
-#### A simple guide for getting started with OpenStack Yoga basic deployment on a single node cluster.
+### A simple guide for getting started with OpenStack Yoga basic deployment on a single node cluster.
 
 
 # Table of Contents
@@ -32,7 +32,7 @@
 
 At this point, you should have your Ubuntu 22.04 LTS already installed. And with that done, you can proceed to install OpenStack.
 
-#### Network Configuration
+### Network Configuration
 Yes, the guide will be starting with configuring the networks, and not installing OpenStack, that will be happened down the road. First of all, there are two kinds of network in OpenStack: 
 
 - **Management Network** - Used for internal communication between OpenStack Components. In this case, because only single node is used, then we can use localhost address (127.0.0.1) for our management network.
@@ -121,13 +121,13 @@ Again, if we get a replies then everything is good. Congrats.
 
 Congratulations, network configuration is done and you can proceed to the next steps!
 
-#### OpenStack Packages
+### OpenStack Packages
 For other Ubuntu version or edition, you may need to add the repository using `add-apt-repository` to includes OpenStack repository. In the case of Ubuntu 22.04 LTS, it already includes OpenStack Yoga by default, so the only step needed is to install OpenStack Client as the CLI for OpenStack operations that can be installed as follows:
 ```bash
 # apt install python3-openstackclient
 ```
 
-#### SQL Database
+### SQL Database
 OpenStack uses SQL database to store information that runs on controller node. This guide will use MariaDB although PostgreSQL is also supported. Here is how to install it on Ubuntu 22.04 LTS:
 ```bash
 # apt install mariadb-server python3-pymysql
@@ -153,7 +153,7 @@ And finally, secure the database service by doing `mysql_secure_installation` sc
 mysql_secure_installation
 ```
 
-#### Message Queue
+### Message Queue
 OpenStack uses a message queue to coordinate operations and providing status for all the services connected that runs on the controller node. There are multiple choices of message queue that supported by OpenStack, but in this guide **RabbitMQ** will be used. Start by installing the message queue:
 ```bash
 # apt install rabbitmq-server
@@ -169,7 +169,7 @@ Finally, give **openstack** user to permit configuration, write, and read access
 # rabbitmqctl set_permissions openstack ".*" ".*" ".*"
 ```
 
-#### Memcached
+### Memcached
 The identity service authentication mechanism for services uses Memcached to cache tokens that runs on the controller node. Start by installing Memcached:
 ```bash
 # apt install memcached python3-memcache
@@ -185,7 +185,7 @@ Finally, restart the memcached service:
 # systemctl restart memcached
 ```
 
-#### Minimal Deployment
+### Minimal Deployment
 Now is the crucial part, finally we will build what is called as **"stack"**, means stack of services. At a minimum, you need atleast these following services:
 
 - [**Keystone** - Identity service](services/keystone.md)

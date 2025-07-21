@@ -1,11 +1,11 @@
-### Keystone - Identity Service
+## Keystone - Identity Service
 The Identity service is the first service a user interacts with. Once authenticated, and end user can use their identity to access other OpenStack services. Here are the steps to get keystone up and running:
 1. [Prequisites](#prequisites)
 2. [Install and Configure Components](#install-and-configure-components)
 3. [Finalize The Installation](#finalize-the-installation)
 4. [Verify Operation](#verify-operation)
 
-#### Prequisites
+### Prequisites
 To get started, create a database for keystone to store its data:
 ```bash
 # mysql
@@ -26,7 +26,7 @@ Replace **KEYSTONE_DBPASS** with a suitable password.
 
 You can exit the database client after finishing steps above.
 
-#### Install and Configure Components
+### Install and Configure Components
 Next, run the following commands to install the keystone package:
 ```bash
 # apt install keystone
@@ -76,13 +76,13 @@ Now, configure the Apache HTTP server config `/etc/apache2/apache2.conf` to modi
 ServerName controller
 ```
 
-#### Finalize The Installation
+### Finalize The Installation
 To finalize the installation, restart the Apache service:
 ```bash
 # systemctl restart apache2
 ```
 
-#### Verify Operation
+### Verify Operation
 Verify operation of the Identity service before installing other services.
 1. Unset the temporary OS_AUTH_URL and OS_PASSWORD environment variable:
     ```bash
