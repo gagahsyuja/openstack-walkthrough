@@ -10,7 +10,7 @@
 
 1. [Learning Resources](#learning-resources)
 2. [Requirements](#requirements)
-2. [Installation Guide](#installation-guide)
+3. [Installation Guide](#installation-guide)
 
 
 ## Learning Resources
@@ -22,7 +22,7 @@
 
 - [VirtualBox](https://www.virtualbox.org) - This guide will occurs mostly on a virtual environment, so a hypervisor is needed. In this example, VirtualBox is used.
 
-- [Ubuntu 20.04 LTS](https://releases.ubuntu.com/focal/) - There's a lot of choice regarding what operating system can be used for OpenStack, but because we are using OpenStack Yoga version, we'll be using Ubuntu and 20.04 LTS to be exact.
+- [Ubuntu 22.04 LTS](https://releases.ubuntu.com/focal/) - There's a lot of choice regarding what operating system can be used for OpenStack, but because we are using OpenStack Yoga version, we'll be using Ubuntu and 22.04 LTS to be exact.
 
 - [OpenStack Yoga](https://docs.openstack.org/install-guide/) - As we said before, OpenStack Yoga version are what we are going to be install. So it's best to keep their docs opened alongside this guide.
 
@@ -30,7 +30,7 @@
 
 ## Installation Guide
 
-At this point, you should have your Ubuntu 20.04 LTS already installed. And with that done, you can proceed to install OpenStack.
+At this point, you should have your Ubuntu 22.04 LTS already installed. And with that done, you can proceed to install OpenStack.
 
 #### Network Configuration
 Yes, the guide will be starting with configuring the networks, and not installing OpenStack, that will be happened down the road. First of all, there are two kinds of network in OpenStack: 
@@ -120,3 +120,67 @@ rtt min/avg/max/mdev = 0.036/0.062/0.082/0.019 ms
 Again, if we get a replies then everything is good. Congrats.
 
 Congratulations, network configuration is done and you can proceed to the next steps!
+
+#### OpenStack Packages
+For other Ubuntu version or edition, you may need to add the repository using `add-apt-repository` to includes OpenStack repository. In the case of Ubuntu 22.04 LTS, it already includes OpenStack Yoga by default, so the only step needed is to install OpenStack Client as the CLI for OpenStack operations that can be installed as follows:
+```bash
+# apt install python3-openstackclient
+```
+
+#### SQL Database
+OpenStack uses SQL database to store information that runs on controller node. This guide will use MariaDB although PostgreSQL is also supported. Here is how to install it on Ubuntu 22.04 LTS:
+```bash
+# apt install mariadb-server python3-pymysql
+```
+After the installation succeed, create and edit `/etc/mysql/mariadb.conf.d/99-openstack.cnf` file to configure the bind-address that will be used for serving MariaDB:
+```bash
+# /etc/mysql/mariadb.conf.d/99-openstack.cnf
+[mysqld]
+bind-address = 127.0.0.1
+
+default-storage-engine = innodb
+innodb_file_per_table = on
+max_connections = 4096
+collation-server = utf8_general_ci
+character-set-server = utf8
+```
+Finalize the installation by restarting the database service:
+```bash
+# systemctl restart mysql
+```
+And finally, secure the database service by doing `mysql_secure_installation` script. Make sure to choose a reasonable password for the root account:
+```bash
+mysql_secure_installation
+```
+
+#### Message Queue
+OpenStack uses a message queue to coordinate operations and providing status for all the services connected that runs on the controller node. There are multiple choices of message queue that supported by OpenStack, but in this guide **RabbitMQ** will be used. Start by installing the message queue:
+```bash
+# apt install rabbitmq-server
+```
+Now add **openstack** user:
+```bash
+# rabbitmqctl add_user openstack RABBIT_PASS
+```
+Replace **RABBIT_PASS** with a suitable password.
+
+Finally, give **openstack** user to permit configuration, write, and read access:
+```bash
+# rabbitmqctl set_permissions openstack ".*" ".*" ".*"
+```
+
+#### Memcached
+The identity service authentication mechanism for services uses Memcached to cache tokens that runs on the controller node. Start by installing Memcached:
+```bash
+# apt install memcached python3-memcache
+```
+If by any chance your management IP address is not `127.0.0.1`, you need to replace the value in `/etc/memcached.conf` file and modify it accordingly:
+```bash
+-l MANAGEMENT_IP_ADDRESS
+```
+Replace **MANAGEMENT_IP_ADDRESS** with your management IP address.
+
+Finally, restart the memcached service:
+```bash
+# systemctl restart memcached
+```
